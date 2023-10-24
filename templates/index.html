@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bookstore</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Bookstore</h1>
+    <form action="/add_book" method="post">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title">
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author">
+        <label for="genre">Genre:</label>
+        <input type="text" id="genre" name="genre">
+        <button type="submit">Add Book</button>
+    </form>
+    <br>
+    <table border="medium" >
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Actions</th>
+        </tr>
+        {%for book in books%}
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.genre }}</td>
+            <td>
+                <a href="/update/{{ book.id }}">Update</a> |
+                <a href="/delete/{{ book.id }}">Delete</a>
+            </td>
+        </tr>
+        {%endfor%}
+    </table>
+    <div id="chart"></div>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // Use Plotly to create a simple pie chart
+        const titles = JSON.parse('{{ books|tojson|safe }}');
+        const authors = titles.map(book => book.author);
+
+        // Calculate the count of each author
+        const authorCounts = authors.reduce((count, author) => {
+            count[author] = (count[author] || 0) + 1;
+            return count;
+        }, {});
+
+        const data = [
+            {
+                labels: Object.keys(authorCounts),
+                values: Object.values(authorCounts),
+                type: 'pie'
+            }
+        ];
+
+        var layout = {
+            title: 'Book Data by Author',
+        };
+
+        Plotly.newPlot('chart', data, layout);
+    </script>
+
+</body>
+</html>
