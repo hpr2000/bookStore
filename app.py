@@ -4,7 +4,7 @@ import uuid
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-graph = Graph("bolt://localhost:7687", auth=("neo4j", "hardi1902"))  # Replace with your Neo4j connection details
+graph = Graph("bolt://localhost:7687", auth=("your_username", "your_password"))  # Replace with your Neo4j connection details
 
 
 @app.route('/')
